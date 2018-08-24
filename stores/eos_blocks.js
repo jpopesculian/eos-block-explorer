@@ -1,5 +1,6 @@
 import { action, observable, computed, autorun, flow } from 'mobx'
 import { chain } from '../lib/api'
+import EosBlockStore from './eos_block'
 
 import { getOrCreateStore } from '../store'
 
@@ -20,6 +21,7 @@ export default class EosBlocksStore {
   maxAmount = 100
   fetchAmount = 10
   timer = undefined
+  @observable running = false
   @observable blocks = {}
 
   constructor(isServer, { delay, blocks = [] }) {
@@ -28,6 +30,7 @@ export default class EosBlocksStore {
   }
 
   @action start = flow(function*() {
+    this.running = true
     yield this.updateHeadBlock()
     this.timer = setTimeout(() => this.start(), this.delay)
   })
@@ -50,7 +53,11 @@ export default class EosBlocksStore {
         headBlockNum - this.fetchAmount
       )
     } else if (headBlockNum > this.headBlockNum) {
-      return yield this.fetchRange(headBlockNum, this.headBlockNum)
+      const lastBlockNum = Math.max(
+        this.headBlockNum,
+        headBlockNum - this.maxAmount
+      )
+      return yield this.fetchRange(headBlockNum, lastBlockNum)
     }
   })
 
@@ -60,14 +67,18 @@ export default class EosBlocksStore {
 
   @action fetch = flow(function*(blockNum) {
     try {
-      const block = yield chain.getBlock(blockNum)
-      this.blocks[block.block_num] = block
-      this.addTransactions(block.transactions)
-      return block
+      return this.add(yield chain.getBlock(blockNum))
     } catch (e) {
       return console.warn(e)
     }
   })
+
+  @action add = block => {
+    const blockStore = new EosBlockStore(false, block)
+    this.blocks[blockStore.num] = blockStore
+    blockStore.emitSideEffects()
+    return blockStore
+  }
 
   @action clearOldBlocks = () => {
     const lastAllowedBlockNum = this.headBlockNum - this.maxAmount
@@ -80,7 +91,7 @@ export default class EosBlocksStore {
   }
 
   @computed get blockList() {
-    return orderBy('block_num', 'desc', values(this.blocks))
+    return orderBy('num', 'desc', values(this.blocks))
   }
 
   @computed get headBlockNum() {
@@ -103,18 +114,8 @@ export default class EosBlocksStore {
     return reject(isNaN, map(parseInt, keys(this.blocks)))
   }
 
-  stop = () => {
+  @action stop = () => {
+    this.running = false
     clearTimeout(this.timer)
-  }
-
-  addTransactions = transactions => {
-    if (transactions.length < 1) {
-      return transactions
-    }
-    const store = getOrCreateStore()
-    forEach(transaction => {
-      defer(() => store.eosTransactions.add(transaction))
-      return transaction
-    }, transactions)
   }
 }

@@ -57,6 +57,7 @@ export default () => (
 
       body {
         font-family: 'Roboto', sans-serif;
+        color: #333;
       }
 
       h1 {
@@ -73,6 +74,11 @@ export default () => (
 
       h4 {
         font-size: 1em;
+      }
+
+      a {
+        text-decoration: none;
+        color: #333;
       }
     `}</style>
   </div>

@@ -1,9 +1,11 @@
 import { action, observable, flow } from 'mobx'
 import { wallet } from '../lib/api'
 import { getOrCreateStore } from '../store'
+import EosKeyStore from './eos_key'
 
 import defer from 'lodash/fp/defer'
 import forEach from 'lodash/fp/forEach'
+import map from 'lodash/fp/map'
 
 export default class EosWalletStore {
   name = ''
@@ -11,7 +13,7 @@ export default class EosWalletStore {
 
   @observable unlocked = false
   @observable opened = false
-  @observable keys = []
+  @observable keys = {}
 
   constructor(isServer, { name, password }) {
     this.name = name
@@ -21,7 +23,7 @@ export default class EosWalletStore {
   @action init = flow(function*() {
     yield this.open()
     yield this.unlock()
-    yield this.getKeys()
+    yield this.fetchKeys()
   })
 
   @action open = flow(function*() {
@@ -44,25 +46,25 @@ export default class EosWalletStore {
     }
   })
 
-  @action getKeys = flow(function*() {
+  @action fetchKeys = flow(function*() {
     try {
-      this.keys = yield wallet.listKeys(this.name, this.password)
-      this.addAccountsFromKeys()
-      return this.keys
+      return this.addKeys(yield wallet.listKeys(this.name, this.password))
     } catch (e) {
       console.warn(e)
       return []
     }
   })
 
-  addAccountsFromKeys = () => {
-    if (this.keys.length < 1) {
-      return []
-    }
-    const store = getOrCreateStore()
-    forEach(({ public_key }) => {
-      defer(() => store.eosAccounts.fetchFromKey(public_key))
-      return public_key
-    }, this.keys)
-  }
+  @action addKeys = flow(function*(keys) {
+    return map(key => {
+      return this.addKey(key)
+    }, keys)
+  })
+
+  @action addKey = flow(function*(key) {
+    const keyStore = new EosKeyStore(false, key)
+    keyStore.emitSideEffects()
+    this.keys[keyStore.public_key] = keyStore
+    return keyStore
+  })
 }

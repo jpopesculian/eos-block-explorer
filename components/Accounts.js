@@ -4,8 +4,8 @@ import Layout from '../layouts/Navigation'
 
 @inject('store')
 @observer
-export default class Blocks extends Component {
+export default class Accounts extends Component {
   render() {
-    return <Layout name="blocks" />
+    return <Layout name="accounts" />
   }
 }

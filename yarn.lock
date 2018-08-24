@@ -973,6 +973,17 @@ babel-plugin-transform-decorators-legacy@^1.3.4:
     babel-runtime "^6.2.0"
     babel-template "^6.3.0"
 
+babel-plugin-transform-imports@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-imports/-/babel-plugin-transform-imports-1.5.0.tgz#3105082ab489b1cee162e42d2ffe7b8f7c685f2e"
+  dependencies:
+    babel-types "^6.6.0"
+    is-valid-path "^0.1.1"
+    lodash.camelcase "^4.3.0"
+    lodash.findkey "^4.6.0"
+    lodash.kebabcase "^4.1.1"
+    lodash.snakecase "^4.1.1"
+
 babel-plugin-transform-react-remove-prop-types@0.4.13:
   version "0.4.13"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-react-remove-prop-types/-/babel-plugin-transform-react-remove-prop-types-0.4.13.tgz#331cfc05099a808238311d78319c27460d481189"
@@ -1008,7 +1019,7 @@ babel-traverse@^6.24.1, babel-traverse@^6.26.0:
     invariant "^2.2.2"
     lodash "^4.17.4"
 
-babel-types@6.26.0, babel-types@^6.24.1, babel-types@^6.26.0:
+babel-types@6.26.0, babel-types@^6.24.1, babel-types@^6.26.0, babel-types@^6.6.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-types/-/babel-types-6.26.0.tgz#a3b073f94ab49eb6fa55cd65227a334380632497"
   dependencies:
@@ -1297,6 +1308,10 @@ class-utils@^0.3.5:
     define-property "^0.2.5"
     isobject "^3.0.0"
     static-extend "^0.1.1"
+
+classnames@^2.2.6:
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
 cliui@^2.1.0:
   version "2.1.0"
@@ -2412,6 +2427,12 @@ is-glob@^4.0.0:
   dependencies:
     is-extglob "^2.1.1"
 
+is-invalid-path@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/is-invalid-path/-/is-invalid-path-0.1.0.tgz#307a855b3cf1a938b44ea70d2c61106053714f34"
+  dependencies:
+    is-glob "^2.0.0"
+
 is-number@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/is-number/-/is-number-2.1.0.tgz#01fcbbb393463a548f2f466cce16dece49db908f"
@@ -2471,6 +2492,12 @@ is-stream@^1.0.1, is-stream@^1.1.0:
 is-symbol@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/is-symbol/-/is-symbol-1.0.1.tgz#3cc59f00025194b6ab2e38dbae6689256b660572"
+
+is-valid-path@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/is-valid-path/-/is-valid-path-0.1.1.tgz#110f9ff74c37f663e1ec7915eb451f2db93ac9df"
+  dependencies:
+    is-invalid-path "^0.1.0"
 
 is-windows@^1.0.2:
   version "1.0.2"
@@ -2595,9 +2622,25 @@ locate-path@^2.0.0:
     p-locate "^2.0.0"
     path-exists "^3.0.0"
 
+lodash.camelcase@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
+
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
+
+lodash.findkey@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.findkey/-/lodash.findkey-4.6.0.tgz#83058e903b51cbb759d09ccf546dea3ea39c4718"
+
+lodash.kebabcase@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.kebabcase/-/lodash.kebabcase-4.1.1.tgz#8489b1cb0d29ff88195cceca448ff6d6cc295c36"
+
+lodash.snakecase@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.snakecase/-/lodash.snakecase-4.1.1.tgz#39d714a35357147837aefd64b5dcbb16becd8f8d"
 
 lodash@^4.17.10, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.5.1:
   version "4.17.10"
@@ -3422,6 +3465,10 @@ react-dom@^16.4.2:
 react-lifecycles-compat@3.0.4, react-lifecycles-compat@^3.0.2:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+
+react-material-icon-svg@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/react-material-icon-svg/-/react-material-icon-svg-1.6.1.tgz#db552e7d5fcdee1899fb0a8480976cff20509f6d"
 
 react@^16.4.2:
   version "16.4.2"

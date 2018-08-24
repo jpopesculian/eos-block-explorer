@@ -21,6 +21,9 @@ export default function getInitialState() {
         }
       ],
       wallets: []
+    },
+    eosAccounts: {
+      accountNames: ['eosio']
     }
   }
 }
