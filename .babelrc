@@ -14,6 +14,10 @@
         "react-material-icon-svg": {
             "transform": "react-material-icon-svg/dist/${member}",
             "preventFullImport": true
+        },
+        "lodash": {
+            "transform": "lodash/fp/${member}",
+            "preventFullImport": true
         }
     }]
   ]

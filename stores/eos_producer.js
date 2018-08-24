@@ -7,7 +7,9 @@ export default class EosProducerStore {
   @observable running = undefined
 
   constructor(isServer, initialState) {
-    defer(() => this.checkPaused())
+    if (!isServer) {
+      defer(() => this.checkPaused())
+    }
   }
 
   @action pause = flow(function*() {

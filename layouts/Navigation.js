@@ -1,11 +1,11 @@
 import Main from './Main'
-import NavigationTabBar from '../components/Navigation/TabBar'
-import StatusInfoBar from '../components/Status/InfoBar'
+import NavigationBar from '../components/NavigationBar'
+import StatusBar from '../components/StatusBar'
 
 export default ({ name, children }) => (
   <Main>
-    <NavigationTabBar name={name} />
-    <StatusInfoBar />
+    <NavigationBar name={name} />
+    <StatusBar />
     {children}
   </Main>
 )
