@@ -3,13 +3,24 @@ export default function getInitialState() {
     clock: {
       lastUpdate: Date.now()
     },
-    eos_settings: {
-      host: 'localhost',
-      port: 8888
+    eosSettings: {
+      nodeosHost: 'localhost',
+      nodeosPort: 8888,
+      keosHost: 'localhost',
+      keosPort: 8900
     },
-    eos_blocks: {
+    eosBlocks: {
       delay: 1000,
       blocks: []
+    },
+    eosWallets: {
+      walletConfig: [
+        {
+          name: 'default',
+          password: 'PW5JfL9xbnJydNHBXrwdV34jLrWyUdVMy6HJKTUmGEmq6w3TvvnAe'
+        }
+      ],
+      wallets: []
     }
   }
 }

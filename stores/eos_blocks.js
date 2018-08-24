@@ -1,6 +1,8 @@
 import { action, observable, computed, autorun, flow } from 'mobx'
 import { chain } from '../lib/api'
 
+import { getOrCreateStore } from '../store'
+
 import range from 'lodash/fp/range'
 import isEmpty from 'lodash/fp/isEmpty'
 import values from 'lodash/fp/values'
@@ -8,8 +10,10 @@ import keys from 'lodash/fp/keys'
 import orderBy from 'lodash/fp/orderBy'
 import reduce from 'lodash/fp/reduce'
 import map from 'lodash/fp/map'
+import forEach from 'lodash/fp/forEach'
 import reject from 'lodash/fp/reject'
 import unset from 'lodash/fp/unset'
+import defer from 'lodash/fp/defer'
 
 export default class EosBlocksStore {
   delay = 1000
@@ -58,6 +62,7 @@ export default class EosBlocksStore {
     try {
       const block = yield chain.getBlock(blockNum)
       this.blocks[block.block_num] = block
+      this.addTransactions(block.transactions)
       return block
     } catch (e) {
       return console.warn(e)
@@ -100,5 +105,16 @@ export default class EosBlocksStore {
 
   stop = () => {
     clearTimeout(this.timer)
+  }
+
+  addTransactions = transactions => {
+    if (transactions.length < 1) {
+      return transactions
+    }
+    const store = getOrCreateStore()
+    forEach(transaction => {
+      defer(() => store.eosTransactions.add(transaction))
+      return transaction
+    }, transactions)
   }
 }

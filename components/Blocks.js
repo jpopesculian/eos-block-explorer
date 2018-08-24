@@ -7,7 +7,7 @@ import BlockFetcher from './BlockFetcher'
 @observer
 export default class Blocks extends Component {
   render() {
-    const store = this.props.store.eos_blocks
+    const store = this.props.store.eosBlocks
     return (
       <Layout>
         <BlockFetcher
