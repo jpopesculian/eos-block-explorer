@@ -17,12 +17,13 @@ import unset from 'lodash/fp/unset'
 import defer from 'lodash/fp/defer'
 
 export default class EosBlocksStore {
-  delay = 1000
+  delay = 250
   maxAmount = 100
   fetchAmount = 10
   timer = undefined
   @observable running = false
   @observable blocks = {}
+  @observable info = {}
 
   constructor(isServer, { delay, blocks = [] }) {
     this.blocks = {}
@@ -38,6 +39,7 @@ export default class EosBlocksStore {
   @action updateHeadBlock = flow(function*() {
     try {
       const info = yield chain.getInfo()
+      this.info = info
       const newBlocks = yield this.fetchNewBlocks(info.head_block_num)
       this.clearOldBlocks()
       return newBlocks
@@ -112,6 +114,10 @@ export default class EosBlocksStore {
 
   @computed get blockNums() {
     return reject(isNaN, map(parseInt, keys(this.blocks)))
+  }
+
+  @computed get producer() {
+    return this.info.head_block_producer
   }
 
   @action stop = () => {

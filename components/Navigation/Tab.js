@@ -29,9 +29,13 @@ export default ({ title, active, Icon, path }) => {
       }
 
       .icon :global(svg) {
-        margin-top: .1em;
-        width: 2em;
+        margin-top: .25em;
+        width: 1.5em;
         height: auto;
+      }
+
+      .tab.active .icon :global(svg) {
+        fill: #fff;
       }
     `}</style>
       </a>

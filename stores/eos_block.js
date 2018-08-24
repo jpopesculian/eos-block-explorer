@@ -2,6 +2,7 @@ import { action, observable, computed, autorun, flow } from 'mobx'
 import { getOrCreateStore } from '../store'
 
 import forEach from 'lodash/fp/forEach'
+import defer from 'lodash/fp/defer'
 
 export default class EosBlockStore {
   block = {}

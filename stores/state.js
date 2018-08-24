@@ -10,7 +10,7 @@ export default function getInitialState() {
       keosPort: 8900
     },
     eosBlocks: {
-      delay: 1000,
+      delay: 250,
       blocks: []
     },
     eosWallets: {
