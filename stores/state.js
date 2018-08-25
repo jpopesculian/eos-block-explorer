@@ -24,6 +24,14 @@ export default function getInitialState() {
     },
     eosAccounts: {
       accountNames: ['eosio']
+    },
+    eosTokens: {
+      tokenConfig: [
+        {
+          symbol: 'SYS',
+          code: 'eosio.token'
+        }
+      ]
     }
   }
 }

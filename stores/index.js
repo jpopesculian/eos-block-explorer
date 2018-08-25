@@ -7,6 +7,7 @@ import EosTransactionsStore from './eos_transactions'
 import EosAccountsStore from './eos_accounts'
 import EosSmartContractsStore from './eos_smart_contracts'
 import EosProducerStore from './eos_producer'
+import EosTokensStore from './eos_tokens'
 
 export default class Store {
   @observable clock = undefined
@@ -16,6 +17,7 @@ export default class Store {
   @observable eosTransactions = undefined
   @observable eosAccounts = undefined
   @observable eosSmartContracts = undefined
+  @observable eosTokens = undefined
 
   constructor(
     isServer,
@@ -27,7 +29,8 @@ export default class Store {
       eosTransactions,
       eosAccounts,
       eosSmartContracts,
-      eosProducer
+      eosProducer,
+      eosTokens
     }
   ) {
     this.clock = new ClockStore(isServer, clock)
@@ -41,5 +44,6 @@ export default class Store {
       eosSmartContracts
     )
     this.eosProducer = new EosProducerStore(isServer, eosProducer)
+    this.eosTokens = new EosTokensStore(isServer, eosTokens)
   }
 }

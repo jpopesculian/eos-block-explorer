@@ -1,7 +1,7 @@
 import { action, observable, computed, autorun, flow } from 'mobx'
 import { getOrCreateStore } from '../store'
 
-import defer from 'lodash/fp/defer'
+import { defer, forEach } from 'lodash'
 
 export default class EosAccountStore {
   account = {}
@@ -17,5 +17,8 @@ export default class EosAccountStore {
   emitSideEffects = () => {
     let store = getOrCreateStore()
     defer(() => store.eosSmartContracts.fetch(this.name))
+    defer(() =>
+      forEach(token => token.fetchBalance(this.name), store.eosTokens.tokens)
+    )
   }
 }

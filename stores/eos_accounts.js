@@ -2,9 +2,7 @@ import { action, observable, computed, autorun, flow } from 'mobx'
 import { chain, history } from '../lib/api'
 import EosAccountStore from './eos_account'
 
-import map from 'lodash/fp/map'
-import forEach from 'lodash/fp/forEach'
-import defer from 'lodash/fp/defer'
+import { map, forEach, defer } from 'lodash'
 
 export default class EosAccountsStore {
   @observable accounts = {}
@@ -39,5 +37,9 @@ export default class EosAccountsStore {
     this.accounts[accountStore.name] = accountStore
     accountStore.emitSideEffects()
     return accountStore
+  }
+
+  @computed get names() {
+    return map('name', this.accounts)
   }
 }
