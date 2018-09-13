@@ -15,7 +15,8 @@ class MyApp extends App {
         'eosSettings',
         'eosWallets',
         'eosAccounts',
-        'eosSmartContracts'
+        'eosSmartContracts',
+        'eosTokens'
       ],
       mobxStore
     )

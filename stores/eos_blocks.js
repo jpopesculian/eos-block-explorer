@@ -4,17 +4,19 @@ import EosBlockStore from './eos_block'
 
 import { getOrCreateStore } from '../store'
 
-import range from 'lodash/fp/range'
-import isEmpty from 'lodash/fp/isEmpty'
-import values from 'lodash/fp/values'
-import keys from 'lodash/fp/keys'
-import orderBy from 'lodash/fp/orderBy'
-import reduce from 'lodash/fp/reduce'
-import map from 'lodash/fp/map'
-import forEach from 'lodash/fp/forEach'
-import reject from 'lodash/fp/reject'
-import unset from 'lodash/fp/unset'
-import defer from 'lodash/fp/defer'
+import {
+  range,
+  isEmpty,
+  values,
+  keys,
+  orderBy,
+  reduce,
+  map,
+  forEach,
+  reject,
+  unset,
+  defer
+} from 'lodash'
 
 export default class EosBlocksStore {
   delay = 250
@@ -22,11 +24,10 @@ export default class EosBlocksStore {
   fetchAmount = 10
   timer = undefined
   @observable running = false
-  @observable blocks = {}
-  @observable info = {}
+  @observable blocks = new Map()
+  @observable info = new Map()
 
-  constructor(isServer, { delay, blocks = [] }) {
-    this.blocks = {}
+  constructor({ delay }) {
     this.delay = delay
   }
 
@@ -39,7 +40,7 @@ export default class EosBlocksStore {
   @action updateHeadBlock = flow(function*() {
     try {
       const info = yield chain.getInfo()
-      this.info = info
+      this.info.replace(info)
       const newBlocks = yield this.fetchNewBlocks(info.head_block_num)
       this.clearOldBlocks()
       return newBlocks
@@ -76,8 +77,8 @@ export default class EosBlocksStore {
   })
 
   @action add = block => {
-    const blockStore = new EosBlockStore(false, block)
-    this.blocks[blockStore.num] = blockStore
+    const blockStore = new EosBlockStore(block)
+    this.blocks.set(blockStore.num, blockStore)
     blockStore.emitSideEffects()
     return blockStore
   }
@@ -86,14 +87,14 @@ export default class EosBlocksStore {
     const lastAllowedBlockNum = this.headBlockNum - this.maxAmount
     if (this.tailBlockNum < lastAllowedBlockNum) {
       return map(
-        blockNum => delete this.blocks[blockNum],
+        blockNum => this.blocks.delete(blockNum),
         range(this.tailBlockNum, lastAllowedBlockNum)
       )
     }
   }
 
   @computed get blockList() {
-    return orderBy('num', 'desc', values(this.blocks))
+    return orderBy('num', 'desc', values(this.blocks.toJSON()))
   }
 
   @computed get headBlockNum() {
@@ -113,11 +114,11 @@ export default class EosBlocksStore {
   }
 
   @computed get blockNums() {
-    return reject(isNaN, map(parseInt, keys(this.blocks)))
+    return reject(isNaN, map(parseInt, keys(this.blocks.toJSON())))
   }
 
   @computed get producer() {
-    return this.info.head_block_producer
+    return this.info.get('head_block_producer')
   }
 
   @action stop = () => {

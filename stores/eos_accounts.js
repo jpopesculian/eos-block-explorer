@@ -1,14 +1,15 @@
 import { action, observable, computed, autorun, flow } from 'mobx'
 import { chain, history } from '../lib/api'
 import EosAccountStore from './eos_account'
+import isServer from '../lib/isServer'
 
 import { map, forEach, defer } from 'lodash'
 
 export default class EosAccountsStore {
-  @observable accounts = {}
+  @observable accounts = new Map()
 
-  constructor(isServer, { accountNames }) {
-    if (!isServer) {
+  constructor({ accountNames }) {
+    if (!isServer()) {
       forEach(accountName => defer(() => this.fetch(accountName)), accountNames)
     }
   }
@@ -33,13 +34,13 @@ export default class EosAccountsStore {
   })
 
   @action add = account => {
-    const accountStore = new EosAccountStore(false, account)
-    this.accounts[accountStore.name] = accountStore
+    const accountStore = new EosAccountStore(account)
+    this.accounts.set(accountStore.name, accountStore)
     accountStore.emitSideEffects()
     return accountStore
   }
 
   @computed get names() {
-    return map('name', this.accounts)
+    return map('name', this.accounts.values())
   }
 }

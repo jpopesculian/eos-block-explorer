@@ -6,17 +6,17 @@ import EosTokenStore from './eos_token'
 import { defer, forEach, map } from 'lodash'
 
 export default class EosTokensStore {
-  @observable tokens = {}
+  @observable tokens = new Map()
 
-  constructor(isServer, { tokenConfig }) {
+  constructor({ tokenConfig }) {
     forEach(token => {
       this.add(token)
     }, tokenConfig)
   }
 
   @action add = token => {
-    const tokenStore = new EosTokenStore(false, token)
-    this.tokens[tokenStore.key] = tokenStore
+    const tokenStore = new EosTokenStore(token)
+    this.tokens.set(tokenStore.key, tokenStore)
     if (!isServer()) {
       defer(() => tokenStore.update())
     }
@@ -25,14 +25,14 @@ export default class EosTokensStore {
 
   @action update = token => {
     const key = `${token.code}:${token.symbol}`
-    if (this.tokens[key]) {
-      this.tokens[key].update()
+    if (this.tokens.has('key')) {
+      this.tokens.get('key').update()
     } else {
       this.add(token)
     }
   }
 
   @computed get tokenAccounts() {
-    return map('code', this.tokens)
+    return map('code', this.tokens.values())
   }
 }

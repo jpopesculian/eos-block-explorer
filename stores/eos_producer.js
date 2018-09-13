@@ -1,13 +1,14 @@
 import { action, observable, computed, autorun, flow } from 'mobx'
 import { producer } from '../lib/api'
+import isServer from '../lib/isServer'
 
 import defer from 'lodash/fp/defer'
 
 export default class EosProducerStore {
   @observable running = undefined
 
-  constructor(isServer, initialState) {
-    if (!isServer) {
+  constructor(initialState) {
+    if (!isServer()) {
       defer(() => this.checkPaused())
     }
   }

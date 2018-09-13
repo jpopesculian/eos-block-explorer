@@ -7,16 +7,16 @@ import defer from 'lodash/fp/defer'
 export default class EosBlockStore {
   block = {}
 
-  constructor(isServer, block) {
+  constructor(block) {
     this.block = block
   }
 
   get num() {
-    return this.block.block_num
+    return this.block['block_num']
   }
 
   get transactions() {
-    return this.block.transactions
+    return this.block['transactions']
   }
 
   emitSideEffects = () => {

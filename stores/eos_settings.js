@@ -7,7 +7,7 @@ export default class EosSettingsStore {
   @observable keosHost = '127.0.0.1'
   @observable keosPort = 8900
 
-  constructor(isServer, { nodeosHost, nodeosPort, keosHost, keosPort }) {
+  constructor({ nodeosHost, nodeosPort, keosHost, keosPort }) {
     this.nodeosHost = nodeosHost
     this.nodeosPort = nodeosPort
     this.keosHost = keosHost

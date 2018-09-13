@@ -1,4 +1,5 @@
 import { action, observable, computed, autorun, flow } from 'mobx'
+import { persist } from 'mobx-persist'
 import { getOrCreateStore } from '../store'
 import EosTransactionStore from './eos_transaction'
 
@@ -7,18 +8,20 @@ import values from 'lodash/fp/values'
 import defer from 'lodash/fp/defer'
 
 export default class EosTransactionsStore {
-  @observable transactions = {}
+  @persist('map', EosTransactionStore)
+  @observable
+  transactions = new Map()
 
-  constructor(isServer, initialState) {}
+  constructor(initialState) {}
 
   @action add = transaction => {
-    const transactionStore = new EosTransactionStore(false, transaction)
-    this.transactions[transactionStore.id] = transactionStore
+    const transactionStore = new EosTransactionStore(transaction)
+    this.transactions.set(transactionStore.id, transactionStore)
     transactionStore.emitSideEffects()
     return transactionStore
   }
 
   @computed get transactionList() {
-    return orderBy('expiration', 'desc', values(this.transactions))
+    return orderBy('expiration', 'desc', this.transactions.values())
   }
 }

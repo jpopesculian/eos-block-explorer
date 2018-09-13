@@ -1,21 +1,22 @@
 import { action, observable, autorun } from 'mobx'
 import EosWalletStore from './eos_wallet'
+import isServer from '../lib/isServer'
 
 import forEach from 'lodash/fp/forEach'
 import defer from 'lodash/fp/defer'
 
 export default class EosWalletsStore {
-  @observable wallets = {}
+  @observable wallets = new Map()
 
-  constructor(isServer, { walletConfig }) {
-    forEach(config => this.load(isServer, config), walletConfig)
+  constructor({ walletConfig }) {
+    forEach(config => this.load(config), walletConfig)
   }
 
-  @action load = (isServer, config) => {
-    const wallet = new EosWalletStore(isServer, config)
-    if (!isServer) {
+  @action load = config => {
+    const wallet = new EosWalletStore(config)
+    if (!isServer()) {
       defer(() => wallet.init())
     }
-    this.wallets[config.name] = wallet
+    this.wallets.set(config.name, wallet)
   }
 }

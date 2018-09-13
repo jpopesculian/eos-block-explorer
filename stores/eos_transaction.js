@@ -1,5 +1,6 @@
 import { action, observable, computed, autorun, flow } from 'mobx'
 import { getOrCreateStore } from '../store'
+import { persist } from 'mobx-persist'
 
 import { some, forEach, filter, map, includes, defer } from 'lodash'
 
@@ -8,12 +9,18 @@ const TOKEN_TRANSFER_ACTION_NAMES = ['issue', 'transfer']
 const TOKEN_CREATE_ACTION_NAMES = ['create']
 
 export default class EosTransactionStore {
+  @persist('object')
   trx = {}
+
+  @persist('object')
   meta = {}
 
-  constructor(isServer, { trx, ...meta }) {
-    this.meta = meta
-    this.trx = trx
+  constructor(args) {
+    if (args) {
+      const { trx, ...meta } = args
+      this.meta = meta
+      this.trx = trx
+    }
   }
 
   get id() {

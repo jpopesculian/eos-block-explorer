@@ -4,9 +4,9 @@ import { chain } from '../lib/api'
 import EosSmartContractStore from './eos_smart_contract'
 
 export default class EosSmartContractsStore {
-  smart_contracts = {}
+  @observable smart_contracts = new Map()
 
-  constructor(isServer, initialState) {}
+  constructor(initialState) {}
 
   @action fetch = flow(function*(accountName) {
     try {
@@ -17,11 +17,11 @@ export default class EosSmartContractsStore {
   })
 
   @action add = smartContract => {
-    const smartContractStore = new EosSmartContractStore(false, smartContract)
+    const smartContractStore = new EosSmartContractStore(smartContract)
     if (!smartContractStore.hasCode) {
       return {}
     }
-    this.smart_contracts[smartContractStore.accountName] = smartContractStore
+    this.smart_contracts.set(smartContractStore.accountName, smartContractStore)
     return smartContractStore
   }
 

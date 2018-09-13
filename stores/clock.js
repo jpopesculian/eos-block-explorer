@@ -4,7 +4,7 @@ export default class ClockStore {
   @observable lastUpdate = 0
   @observable light = false
 
-  constructor(isServer, { lastUpdate }) {
+  constructor({ lastUpdate }) {
     this.lastUpdate = lastUpdate
   }
 

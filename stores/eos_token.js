@@ -5,12 +5,12 @@ import { getOrCreateStore } from '../store'
 import { defer, map } from 'lodash'
 
 export default class EosTokenStore {
-  @observable stats = {}
-  @observable balances = {}
+  @observable stats = new Map()
+  @observable balances = new Map()
   code = ''
   symbol = ''
 
-  constructor(isServer, { symbol, code }) {
+  constructor({ symbol, code }) {
     this.symbol = symbol
     this.code = code
   }
@@ -21,10 +21,12 @@ export default class EosTokenStore {
 
   @action fetchStats = flow(function*() {
     try {
-      this.stats = yield chain.getCurrencyStats({
-        symbol: this.symbol,
-        code: this.code
-      })
+      this.stats.replace(
+        yield chain.getCurrencyStats({
+          symbol: this.symbol,
+          code: this.code
+        })
+      )
       return this.stats
     } catch (e) {
       console.warn(e)
@@ -47,7 +49,7 @@ export default class EosTokenStore {
         code: this.code,
         symbol: this.symbol
       })
-      this.balances[accountName] = balance
+      this.balances.set(accountName, balance)
       return balance
     } catch (e) {}
   })

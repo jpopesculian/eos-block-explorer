@@ -13,9 +13,9 @@ export default class EosWalletStore {
 
   @observable unlocked = false
   @observable opened = false
-  @observable keys = {}
+  @observable keys = new Map()
 
-  constructor(isServer, { name, password }) {
+  constructor({ name, password }) {
     this.name = name
     this.password = password
   }
@@ -62,9 +62,9 @@ export default class EosWalletStore {
   })
 
   @action addKey = flow(function*(key) {
-    const keyStore = new EosKeyStore(false, key)
+    const keyStore = new EosKeyStore(key)
     keyStore.emitSideEffects()
-    this.keys[keyStore.public_key] = keyStore
+    this.keys.set(keyStore.public_key, keyStore)
     return keyStore
   })
 }
